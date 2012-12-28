@@ -30,6 +30,14 @@ class mcollective::node {
         require => [Package["rubygems"], Package["ruby-stomp"]],
       }
 
+      augeas { 'Enable mcollective':
+        lens    => 'Shellvars.lns',
+        incl    => '/etc/default/mcollective',
+        changes => 'set RUN yes',
+        require => Package['mcollective'],
+        notify  => Service['mcollective'],
+      }
+
       $mcollective_libdir = '/usr/share/mcollective/plugins'
     }
 
