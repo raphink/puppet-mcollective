@@ -1,19 +1,31 @@
 topicprefix = /topic/
 main_collective = mcollective
 collectives = mcollective
-libdir = <%= mcollective_libdir %>
+libdir = <%= @mcollective_libdir %>
 logfile = /dev/null
 loglevel = info
 
 # Plugins
-securityprovider = psk
-plugin.psk = <%= mcollective_psk %>
+securityprovider = <%= @security_provider %>
+plugin.<%= @security_provider %> = <%= @security_secret %>
 
-connector = stomp
-plugin.stomp.host = <%= stomp_broker %>
-plugin.stomp.port = <%= stomp_port %>
-plugin.stomp.user = guest
-plugin.stomp.password = guest
+connector = <%= @connector %>
+<% if @connector == 'rabbitmq' %>
+plugin.rabbitmq.vhost = <%= @vhost %>
+<% end %>
+plugin.<%= @connector %>.pool.size = 1
+plugin.<%= @connector %>.pool.1.host = <%= @stomp_broker %>
+plugin.<%= @connector %>.pool.1.user = <%= @user %>
+plugin.<%= @connector %>.pool.1.password = <%= @password %>
+plugin.<%= @connector %>.pool.1.ssl = <%= @ssl %>
+<% if @ssl %>
+plugin.<%= @connector %>.pool.1.port = <%= @stomp_ssl_port %>
+plugin.<%= @connector %>.pool.1.ssl.cert = <%= @ssl_cert %>
+plugin.<%= @connector %>.pool.1.ssl.key = <%= @ssl_key %>
+plugin.<%= @connector %>.pool.1.ssl.ca = <%= @ssl_ca %>
+<% else %>
+plugin.<%= @connector %>.pool.1.port = <%= @stomp_port %>
+<% end %>
 
 # Facts
 factsource = yaml

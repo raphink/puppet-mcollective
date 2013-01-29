@@ -1,5 +1,17 @@
-class mcollective::client {
-  include ::mcollective::node
+class mcollective::client (
+  $security_provider = 'psk',
+  $security_secret = $::mcollective_psk,
+  $connector = 'rabbitmq',
+  $vhost = '/mcollective',
+  $host = $::stomp_broker,
+  $port = $::stomp_port,
+  $user = 'guest',
+  $password = 'guest',
+  $ssl = true,
+  $ssl_cert = "/var/lib/puppet/ssl/certs/${::fqdn}.pem",
+  $ssl_key = "/var/lib/puppet/ssl/private_keys/${::fqdn}.pem",
+  $ssl_ca = '/var/lib/puppet/ssl/certs/ca.pem',
+) {
 
   $client_require = $::operatingsystem ? {
     /Debian|Ubuntu/ => [Package['rubygems'], Package['ruby-stomp']],

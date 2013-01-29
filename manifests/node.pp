@@ -1,4 +1,18 @@
-class mcollective::node {
+class mcollective::node (
+  $security_provider = 'psk',
+  $security_secret = $::mcollective_psk,
+  $connector = 'rabbitmq',
+  $vhost = '/mcollective',
+  $host = $::stomp_broker,
+  $port = $::stomp_port,
+  $ssl_port = $::stomp_ssl_port,
+  $user = 'guest',
+  $password = 'guest',
+  $ssl = true,
+  $ssl_cert = "/var/lib/puppet/ssl/certs/${::fqdn}.pem",
+  $ssl_key = "/var/lib/puppet/ssl/private_keys/${::fqdn}.pem",
+  $ssl_ca = '/var/lib/puppet/ssl/certs/ca.pem',
+) {
 
   include ruby::gems
 
