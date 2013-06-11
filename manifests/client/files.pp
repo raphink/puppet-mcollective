@@ -65,5 +65,22 @@ class mcollective::client::files {
         group  => 'root',
         mode   => '0644';
     }
+
+    $broker_user = $mcollective::client::broker_user
+    file { '/etc/profile.d/mco-client.sh':
+      ensure  => present,
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+      content => inline_template(
+'i  f [ $(id -nu) != "root" ]; then
+<%  - unless @broker_user or @broker_user.nil? -%>
+    export STOMP_USER="$USER"
+<%  - end -%>
+    export MCOLLECTIVE_SSL_PRIVATE="$HOME/.mc/$USER-private.pem"
+    export MCOLLECTIVE_SSL_PUBLIC="$HOME/.mc/$USER.pem"
+fi
+')  ,
+    }
   }
 }
